@@ -63,13 +63,13 @@ public class DeviousMinds extends BasicQuestHelper
 
 	//NPC Discussions
 	QuestStep talkToMonk, talkToMonk2, teleToAbyss, enterLawRift, leaveLawAltar, talkToHighPriest,
-		talkToSirTiffy, talkToEntranaMonk;
+		talkToSirTiffy, talkToEntranaMonk, talkToHighPriestAfterPouch;
 
 	//Object steps
 	QuestStep makeBlade, makeBowSword, makeIllumPouch, usePouchOnAltar, gotoDeadMonk, useGangPlank;
 
 	//Conditions
-	Requirement inAbyss, inLawAlter, onEntrana, onEntranaBoat;
+	Requirement inAbyss, inLawAlter, onEntrana, onEntranaBoat, usedPouchOnAltar;
 
 	//Zones
 	Zone abyss, lawAltar, entrana, entranaBoat;
@@ -93,6 +93,7 @@ public class DeviousMinds extends BasicQuestHelper
 		steps.put(20, talkToMonk2);   //Finished talking
 
 		ConditionalStep entranaAltarPouch = new ConditionalStep(this, makeIllumPouch);
+		entranaAltarPouch.addStep(usedPouchOnAltar, talkToHighPriestAfterPouch);
 		entranaAltarPouch.addStep(new Conditions(illumPouch.alsoCheckBank(questBank), onEntrana), usePouchOnAltar);
 		entranaAltarPouch.addStep(new Conditions(illumPouch.alsoCheckBank(questBank), inLawAlter), leaveLawAltar);
 		entranaAltarPouch.addStep(new Conditions(illumPouch.alsoCheckBank(questBank), inAbyss), enterLawRift);
@@ -145,6 +146,7 @@ public class DeviousMinds extends BasicQuestHelper
 		inLawAlter = new ZoneRequirement(lawAltar);
 		onEntrana = new ZoneRequirement(entrana);
 		onEntranaBoat = new ZoneRequirement(entranaBoat);
+		usedPouchOnAltar = new VarbitRequirement(1466, 2);
 	}
 
 	public void loadZones()
@@ -187,6 +189,8 @@ public class DeviousMinds extends BasicQuestHelper
 		usePouchOnAltar = new ObjectStep(this, NullObjectID.NULL_10638, new WorldPoint(2853, 3349, 0),
 			"Use the illuminated pouch on the Altar in the Entrana Church.", illumPouch.highlighted());
 		usePouchOnAltar.addIcon(ItemID.LARGE_POUCH_6819);
+		talkToHighPriestAfterPouch = new NpcStep(this, NpcID.HIGH_PRIEST, new WorldPoint(2851, 3349, 0),
+			"Talk to the High Priest in the Entrana Church.");
 
 		gotoDeadMonk = new NpcStep(this, NpcID.DEAD_MONK, new WorldPoint(3406, 3494, 0),
 			"Go back to the monk near Paterdomus temple and search the dead monk's body.");
